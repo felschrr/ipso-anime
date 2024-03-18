@@ -36,7 +36,7 @@ export const useStorage = (prefix, storageType = StorageType.local) => {
             return val;
             
         } catch(err) {
-            console.log('[GET FROM STORAGE ERROR]', err);
+            console.error('[GET FROM STORAGE ERROR]', err);
             return null;
         }
     }
@@ -46,7 +46,7 @@ export const useStorage = (prefix, storageType = StorageType.local) => {
             selectedStorage.removeItem(prefix + prop);
             return true;
         } catch(err) {
-            console.log('[REMOVE FROM STORAGE ERROR]', err);
+            console.error('[REMOVE FROM STORAGE ERROR]', err);
             return false;
         }
     };

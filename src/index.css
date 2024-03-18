@@ -5,11 +5,3 @@
 .active{
     color: #1D4ED8 !important;
 }
-
-button > svg {
-    display: inline !important;
-}
-
-#login{
-    color: white !important;
-}
