@@ -1,11 +1,13 @@
 import React from "react";
-import {SearchLogic, SearchResults} from "../components";
+import {SearchBar, SearchResults} from "../components";
 import { SearchProvider } from "../contexts/SearchContext";
 
 const Search = () => {
     return (
         <SearchProvider>
-            <SearchLogic />
+            <div className="flex justify-center align-middle">
+                <SearchBar />
+            </div>
             <SearchResults />
         </SearchProvider>
     );

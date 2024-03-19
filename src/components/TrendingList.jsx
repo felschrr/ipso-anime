@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion} from "framer-motion";
 
-const TrendingList = ({ seriesList, source }) => {
+const TrendingList = ({ seriesList }) => {
     return (
         <div className="grid gap-8 mt-12 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {seriesList.map((serie, i) => (
@@ -11,7 +11,7 @@ const TrendingList = ({ seriesList, source }) => {
                     animate={{ opacity: 1, x: 0 }}
                     className="overflow-hidden bg-white rounded-lg shadow-md"
                 >
-                    <Link to={`/${source}/${serie.mal_id}`}>
+                    <Link to={serie.url.split('.net')[1]}>
                         <img
                             className="object-cover w-full h-96"
                             src={serie.images.jpg.large_image_url}

@@ -5,7 +5,7 @@ const Header = () => {
     const { logout, user } = useAuth();
 
     return (
-        <header className="py-4 text-white bg-gray-800">
+        <header className="py-4 mb-8 text-white bg-gray-800">
             <div className="container flex items-center justify-between mx-auto">
                 <Link to="/" className="text-xl font-bold">
                     Ipso Anime

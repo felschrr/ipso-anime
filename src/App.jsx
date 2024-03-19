@@ -38,8 +38,8 @@ const App = () => {
                         />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        <Route path="/:type/:id" element={<Serie />} />
-                        <Route path="/:user/:uid" element={<User />} />
+                        <Route path="/:type/:id/:name" element={<Serie />} />
+                        <Route path="/user/:uid" element={<User />} />
                     </Routes>
                 </Layout>
             </Router>
