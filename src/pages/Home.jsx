@@ -1,9 +1,14 @@
-import React from 'react'
+import { Trending } from "../components/";
+import { TrendingProvider } from "../contexts/TrendingContext";
 
 const Home = () => {
-  return (
-    <div>Home</div>
-  )
-}
+    return (
+        <>
+            <TrendingProvider>
+                <Trending />
+            </TrendingProvider>
+        </>
+    );
+};
 
-export default Home
+export default Home;

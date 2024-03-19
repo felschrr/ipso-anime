@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
+import { useAuth } from "../contexts/AuthContext";
 
-const Profile = () => {
+function Profile() {
+  const { currentUser } = useAuth();
+  console.log(currentUser)
   return (
-    <div>Profile</div>
-  )
+    <div>
+      <h1>Tableau de bord</h1>
+      {currentUser && <p>Bonjour, {currentUser.email}</p>}
+    </div>
+  );
 }
 
 export default Profile

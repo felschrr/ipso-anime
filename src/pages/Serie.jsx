@@ -65,7 +65,9 @@ const Serie = () => {
                   src={serieData.trailer.embed_url}
                   title={serieData.title}
                   allowFullScreen
-                  autopause="true"
+                  autoPlay="0"
+                  rel="0"
+                  modestbranding="1"
                 ></iframe>
               </div>
             </div>
