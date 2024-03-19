@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "../config/firestore";
+import { auth, db } from "../config/firestore";
 import {
     onAuthStateChanged,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
 } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
@@ -31,18 +32,58 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
+        const unsubscribe = onAuthStateChanged(auth, async (userAuth) => {
+            if (userAuth) {
+                const userData = await getUserData(userAuth.uid);
+                setUser(userData);
+            } else {
+                setUser(null);
+            }
             setLoading(false);
         });
 
         return unsubscribe;
     }, []);
 
-    // Inscription
-    async function signup(email, password) {
+    async function getUserData(uid) {
+        const userRef = doc(db, "users", uid);
+        const userSnapshot = await getDoc(userRef);
+        if (userSnapshot.exists()) {
+            return userSnapshot.data();
+        } else {
+            // Logically, you may not find user data immediately after sign up before the document is created.
+            // Consider handling this case gracefully.
+            return null;
+        }
+    }
+
+    async function createUserDocument(uid, email, username) {
+        const userRef = doc(db, "users", uid);
+        const userData = {
+            uid,
+            email,
+            username,
+            preferences: [],
+            register_date: new Date().toLocaleDateString("fr-FR"),
+            photoURL: `https://ui-avatars.com/api/?background=random&name=${username}`,
+        };
+        await setDoc(userRef, userData);
+        return userData;
+    }
+
+    async function signup(username, email, password) {
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
+            const { user: userAuth } = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+            const userData = await createUserDocument(
+                userAuth.uid,
+                email,
+                username
+            );
+            setUser(userData);
             toast.success("Inscription réussie !", toastSettings);
         } catch (error) {
             console.error(error);
@@ -55,7 +96,6 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    // Connexion
     async function login(email, password) {
         try {
             await signInWithEmailAndPassword(auth, email, password);
@@ -71,7 +111,6 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    // Déconnexion
     async function logout() {
         try {
             const confirmLogout = await Swal.fire({

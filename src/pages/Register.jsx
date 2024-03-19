@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const Register = () => {
     const [userData, setUserData] = useState({
+        username: "",
         email: "",
         password: "",
     });
@@ -24,7 +25,7 @@ const Register = () => {
         e.preventDefault();
         setError(null);
         try {
-            await signup(userData.email, userData.password);
+            await signup(userData.username, userData.email, userData.password);
             navigate("/");
         } catch (err) {
             setError(err.message);
@@ -38,7 +39,21 @@ const Register = () => {
                 {error && <div className="text-sm text-red-600">{error}</div>}
                 <form onSubmit={handleRegister}>
                     <div className="mt-4">
-                        <div>
+                        <div className="mb-4">
+                            <label className="block" htmlFor="username">
+                                Username
+                            </label>
+                            <input
+                                type="text"
+                                name="username" // Corrected attribute name
+                                id="username" // Corrected attribute id
+                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                value={userData.username}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-4">
                             <label className="block" htmlFor="email">
                                 Email
                             </label>
@@ -52,7 +67,7 @@ const Register = () => {
                                 required
                             />
                         </div>
-                        <div className="mt-4">
+                        <div className="mb-4">
                             <label className="block" htmlFor="password">
                                 Password
                             </label>
@@ -66,12 +81,12 @@ const Register = () => {
                                 required
                             />
                         </div>
-                        <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center justify-between mb-4">
                             <button className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
                                 Register
                             </button>
                         </div>
-                        <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center justify-between mb-4">
                             <p>You already have an account?</p>
                             <Link
                                 to="/login"

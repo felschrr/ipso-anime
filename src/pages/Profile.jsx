@@ -37,18 +37,17 @@ function Profile() {
                 <>
                     <div className="flex items-center gap-4 mb-8">
                         <ModalImage
-                            small={// user.photoURL ||
+                            small={ user.photoURL ||
                                 "https://placehold.co/300"}
-                            large={// user.photoURL ||
+                            large={ user.photoURL ||
                                 "https://placehold.co/600"}
-
                             imageBackgroundColor="rgba(255, 255, 255, 0.0)"
                             alt={"Photo de profil de " + user.username}
                             className="w-20 h-20 rounded-full"
                             hideDownload
                             hideZoom
                         />
-                        <p className="text-xl">Bonjour, {user.email}</p>
+                        <p className="text-xl">Bonjour, {user.username}</p>
                     </div>
 
                     <div className="mb-4 border-b-2 border-gray-200">
