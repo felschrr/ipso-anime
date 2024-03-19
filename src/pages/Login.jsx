@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Login = () => {
     const [userData, setUserData] = useState({
@@ -54,7 +55,16 @@ const Login = () => {
                                    required />
                         </div>
                         <div className="flex items-center justify-between mt-4">
-                            <button className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">S'inscrire</button>
+                            <button className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Login</button>
+                        </div>
+                        <div className="flex items-center justify-between mt-4">
+                            <p>You don't have an account?</p>
+                            <Link
+                                to="/register"
+                                className="text-blue-600 underline"
+                            >
+                                Register
+                            </Link>
                         </div>
                     </div>
                 </form>
