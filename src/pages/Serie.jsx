@@ -5,14 +5,14 @@ import Skeleton from 'react-loading-skeleton';
 
 const Serie = () => {
   const [serieData, setSerieData] = useState(null);
-  const { id } = useParams();
+  const { type, id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`https://api.jikan.moe/v4/anime/${id}`);
+        const response = await axios.get(`https://api.jikan.moe/v4/${type}/${id}`);
         setSerieData(response.data.data);
       } catch (error) {
         console.error('Erreur lors de la récupération de la série :', error);
@@ -22,7 +22,6 @@ const Serie = () => {
     };
 
     fetchData();
-    // Clean up effect
     return () => {
       setSerieData(null);
     };

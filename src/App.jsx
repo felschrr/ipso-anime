@@ -38,7 +38,7 @@ const App = () => {
                         />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        <Route path="/:source/:id" element={<Serie />} />
+                        <Route path="/:type/:id" element={<Serie />} />
                         <Route path="/:user/:uid" element={<User />} />
                     </Routes>
                 </Layout>
