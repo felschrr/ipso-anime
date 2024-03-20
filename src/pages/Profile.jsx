@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { useStorage } from "../contexts/StorageContext";
+import { useUser } from "../contexts/UserContext";
 import ModalImage from "react-modal-image";
 
 function Profile() {
     const { user } = useAuth();
+    const { updatePhotoURL } = useUser();
+    const { uploadImage } = useStorage();
     const [activeTab, setActiveTab] = useState("series");
     const [selectedImage, setSelectedImage] = useState(null);
+    const [image, setImage] = useState(null);
+
 
     // Fonction pour changer l'onglet actif
     const changeTab = (tab) => {
@@ -13,8 +19,9 @@ function Profile() {
     };
 
     // Fonction appelée lorsque l'utilisateur sélectionne une image
-    const handleImageChange = (event) => {
-        const file = event.target.files[0];
+    const handleImageChange = (e) => {
+        // console.log(e.target.files);
+        const file = e.target.files[0];
         // Vérifie si un fichier a été sélectionné
         if (file) {
             const reader = new FileReader();
@@ -22,13 +29,19 @@ function Profile() {
                 setSelectedImage(reader.result);
             };
             reader.readAsDataURL(file);
+            setImage(file);
         }
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault()
-        //TODO: Ajouter logique de modification des infos 
-    }
+        e.preventDefault();
+        try{
+            uploadImage(image, user.uid)
+            // window.location.reload();
+        } catch(e){
+            console.error(e)
+        }
+    };
 
     return (
         <div className="container w-1/2 p-8 mx-auto border rounded">
@@ -37,10 +50,8 @@ function Profile() {
                 <>
                     <div className="flex items-center gap-4 mb-8">
                         <ModalImage
-                            small={ user.photoURL ||
-                                "https://placehold.co/300"}
-                            large={ user.photoURL ||
-                                "https://placehold.co/600"}
+                            small={user.photoURL || "https://placehold.co/300"}
+                            large={user.photoURL || "https://placehold.co/600"}
                             imageBackgroundColor="rgba(255, 255, 255, 0.0)"
                             alt={"Photo de profil de " + user.username}
                             className="w-20 h-20 rounded-full"
@@ -165,16 +176,20 @@ function Profile() {
                                         accept="image/*"
                                         onChange={handleImageChange}
                                     />
-                                    <ModalImage
-                                        small={selectedImage}
-                                        large={selectedImage}
-                                        src={selectedImage}
-                                        imageBackgroundColor="rgba(255, 255, 255, 0.0)"
-                                        alt="New profile picture"
-                                        className="object-cover w-20 h-20 rounded-full"
-                                        hideDownload
-                                        hideZoom
-                                    />
+                                    {selectedImage ? (
+                                        <ModalImage
+                                            small={selectedImage}
+                                            large={selectedImage}
+                                            src={selectedImage}
+                                            imageBackgroundColor="rgba(255, 255, 255, 0.0)"
+                                            alt="New profile picture"
+                                            className="object-cover w-20 h-20 rounded-full"
+                                            hideDownload
+                                            hideZoom
+                                        />
+                                    ) : (
+                                        ""
+                                    )}
                                 </div>
                                 <button
                                     className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
