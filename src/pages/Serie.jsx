@@ -100,7 +100,7 @@ const Serie = () => {
                             </ul>
                         </div>
                     </div>
-                    {serieData.trailer.embed_url && (
+                    {serieData.trailer && serieData.trailer.embed_url && (
                         <div className="w-3/4 h-full mx-auto trailer">
                             <h3 className="mb-4 text-xl font-bold">Trailer</h3>
                             <div className="aspect-video">
