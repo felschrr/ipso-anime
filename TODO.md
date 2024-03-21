@@ -14,19 +14,19 @@
 * [ ] Ajoute un évènement aux moments de sorties des séries favorites 
 
 ### Paramètres
-* [ ] Vérifier l'adresse mail de l'utilisateur.
+* [X] Vérifier l'adresse mail de l'utilisateur.
 * [X] Modifier l'username de l'utilisateur.
 * [X] Modifier l'email de l'utilisateur.
 * [X] Modifier le mot de passe de l'utilisateur.
 * [X] Modifier la photo de profil de l'utilisateur.
-* [ ] Modifier les préférences (thême, langue) de l'utilisateur.
+* [ ] Modifier les préférences (thème, langue) de l'utilisateur.
 * [ ] Modifier en temps réel les informations de l'utilisateur après envoi du formulaire.
 
 ## Series
 
 - [ ] Ajout d'une série en favoris.
 - [ ] Suppression d'un série en favoris.
-- [ ] Noter une série ([⭐](https://emojipedia.org/fr/%C3%A9toile)/ 10).
+- [ ] Noter une série (⭐/ 10).
 - [ ] Décider du moment de sortie du chapitre/épisode.
 - [ ] Voir les favoris.
 - [ ] Partager les favoris.
