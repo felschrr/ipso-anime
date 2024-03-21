@@ -1,22 +1,13 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSearchContext } from "../contexts/SearchContext";
-import { useDebounce } from "../hooks/";
-import { useSearchParams } from "react-router-dom";
+import { useSearch } from "../contexts/SearchContext"; // Assurez-vous que c'est le bon chemin d'import
+import { useDebounce } from "../hooks/"; // Vérifiez également ce chemin
+import SearchResultsDropdown from "./SearchResultsDropdown"; // Importez le composant du menu volant
 
 const SearchBar = () => {
-    const { setSearchResults, setInputSearch, setIsLoading, inputSearch } =
-        useSearchContext();
+    const { inputSearch, setInputSearch, setSearchResults, setIsLoading } = useSearch();
     const debouncedSearchTerm = useDebounce(inputSearch, 500);
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    useEffect(() => {
-        // Récupère la requête de recherche à partir de l'URL lors du chargement initial du composant
-        const urlQuery = searchParams.get("query");
-        if (urlQuery && urlQuery !== inputSearch) {
-            setInputSearch(urlQuery);
-        }
-    }, []); // S'exécute une seule fois à l'initialisation
+    const [isInputFocused, setIsInputFocused] = useState(false);
 
     useEffect(() => {
         if (debouncedSearchTerm) {
@@ -27,7 +18,6 @@ const SearchBar = () => {
                         `https://api.jikan.moe/v4/anime?q=${debouncedSearchTerm}`
                     );
                     setSearchResults(response.data.data);
-                    setSearchParams({ query: debouncedSearchTerm });
                 } catch (error) {
                     console.error("Erreur lors de la recherche :", error);
                 } finally {
@@ -37,14 +27,23 @@ const SearchBar = () => {
 
             fetchData();
         }
-    }, [debouncedSearchTerm, setIsLoading, setSearchResults, setSearchParams]);
+    }, [debouncedSearchTerm, setIsLoading, setSearchResults]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // La logique pour gérer la soumission du formulaire si nécessaire
+    };
+
+    const handleFocus = () => {
+        setIsInputFocused(true);
+    };
+
+    const handleBlur = () => {
+        setIsInputFocused(false);
     };
 
     return (
-        <div className="w-1/3">
+        <div className="relative w-full">
             <form onSubmit={handleSubmit} className="p-8">
                 <label htmlFor="searchInput" className="sr-only">
                     Rechercher
@@ -58,6 +57,8 @@ const SearchBar = () => {
                         required
                         value={inputSearch}
                         onChange={(e) => setInputSearch(e.target.value)}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
                     />
                     <button
                         type="submit"
@@ -67,6 +68,7 @@ const SearchBar = () => {
                     </button>
                 </div>
             </form>
+            {isInputFocused && inputSearch && <SearchResultsDropdown />}
         </div>
     );
 };

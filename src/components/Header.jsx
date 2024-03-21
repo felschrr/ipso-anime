@@ -1,19 +1,26 @@
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-
+import { useLocation } from "react-router-dom";
+import SearchBar from "./SearchBar";
 const Header = () => {
     const { logout, user } = useAuth();
+    const location = useLocation();
 
     return (
-        <header className="py-4 mb-8 text-white bg-gray-800">
+        <header className="mb-8 text-white bg-gray-800">
             <div className="container flex items-center justify-between mx-auto">
                 <Link to="/" className="text-xl font-bold">
                     Ipso Anime
                 </Link>
+                <SearchBar/>
                 <nav>
                     <ul className="flex space-x-4">
                         <li>
-                            <NavLink to="/" exact="true" activeclassname="font-bold">
+                            <NavLink
+                                to="/"
+                                exact="true"
+                                activeclassname="font-bold"
+                            >
                                 Home
                             </NavLink>
                         </li>
