@@ -1,45 +1,83 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useStorage } from "../contexts/StorageContext";
 import { useUser } from "../contexts/UserContext";
 import ModalImage from "react-modal-image";
 
 function Profile() {
-    const { user } = useAuth();
-    const { updatePhotoURL } = useUser();
+    const { user, authUser, sendNewEmailVerification } = useAuth();
     const { uploadImage } = useStorage();
+    const { setNewDisplayName, setNewEmail, setNewPassword } = useUser();
     const [activeTab, setActiveTab] = useState("series");
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [image, setImage] = useState(null);
+    const [formData, setFormData] = useState({
+        displayName: user.displayName || "",
+        email: authUser.email || "",
+        password: "",
+        image: null,
+        selectedImage: null,
+    });
+    const [profileImage, setProfileImage] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
 
+    useEffect(() => {
+        if (user && user.photoURL) {
+            setProfileImage(user.photoURL);
+        }
+    }, [user]);
 
-    // Fonction pour changer l'onglet actif
-    const changeTab = (tab) => {
-        setActiveTab(tab);
-    };
-
-    // Fonction appelée lorsque l'utilisateur sélectionne une image
     const handleImageChange = (e) => {
-        // console.log(e.target.files);
         const file = e.target.files[0];
-        // Vérifie si un fichier a été sélectionné
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setSelectedImage(reader.result);
+                setFormData((prevState) => ({
+                    ...prevState,
+                    selectedImage: reader.result,
+                    image: file,
+                }));
             };
             reader.readAsDataURL(file);
-            setImage(file);
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
-            uploadImage(image, user.uid)
-            // window.location.reload();
-        } catch(e){
-            console.error(e)
+        try {
+            if (formData.image) {
+                await uploadImage(formData.image, user.uid);
+            }
+            if (formData.displayName && formData.displayName !== user.displayName) {
+                await setNewDisplayName(formData.displayName);
+            }
+            if (formData.email && formData.email !== user.email) {
+                await setNewEmail(formData.email);
+            }
+            if (formData.password) {
+                await setNewPassword(formData.password);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const togglePasswordVisibility = (e) => {
+        e.preventDefault();
+        setShowPassword((prevState) => !prevState);
+    };
+
+    const handleVerifyEmail = async () => {
+        try {
+            await sendNewEmailVerification(authUser);
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -50,15 +88,15 @@ function Profile() {
                 <>
                     <div className="flex items-center gap-4 mb-8">
                         <ModalImage
-                            small={user.photoURL || "https://placehold.co/300"}
-                            large={user.photoURL || "https://placehold.co/600"}
+                            small={profileImage || "https://placehold.co/300"}
+                            large={profileImage || "https://placehold.co/600"}
                             imageBackgroundColor="rgba(255, 255, 255, 0.0)"
-                            alt={"Photo de profil de " + user.username}
+                            alt={"Photo de profil de " + user.displayName}
                             className="w-20 h-20 rounded-full"
                             hideDownload
                             hideZoom
                         />
-                        <p className="text-xl">Bonjour, {user.username}</p>
+                        <p className="text-xl">Bonjour, {user.displayName}</p>
                     </div>
 
                     <div className="mb-4 border-b-2 border-gray-200">
@@ -68,7 +106,7 @@ function Profile() {
                                     ? "border-b-2 border-blue-500"
                                     : ""
                             }`}
-                            onClick={() => changeTab("series")}
+                            onClick={() => setActiveTab("series")}
                         >
                             Séries
                         </button>
@@ -78,7 +116,7 @@ function Profile() {
                                     ? "border-b-2 border-blue-500"
                                     : ""
                             }`}
-                            onClick={() => changeTab("calendar")}
+                            onClick={() => setActiveTab("calendar")}
                         >
                             Calendrier
                         </button>
@@ -88,7 +126,7 @@ function Profile() {
                                     ? "border-b-2 border-blue-500"
                                     : ""
                             }`}
-                            onClick={() => changeTab("settings")}
+                            onClick={() => setActiveTab("settings")}
                         >
                             Paramètres
                         </button>
@@ -99,7 +137,6 @@ function Profile() {
                             <h2 className="mb-2 text-xl font-semibold">
                                 Mes séries
                             </h2>
-                            {/* Insérez ici la logique d'affichage des séries de l'utilisateur */}
                             <p>Liste des séries...</p>
                         </div>
                     )}
@@ -109,7 +146,6 @@ function Profile() {
                             <h2 className="mb-2 text-xl font-semibold">
                                 Mon calendrier
                             </h2>
-                            {/* Insérez ici la logique d'affichage du calendrier de l'utilisateur */}
                             <p>Calendrier hebdomadaire...</p>
                         </div>
                     )}
@@ -119,21 +155,36 @@ function Profile() {
                             <h2 className="mb-2 text-xl font-semibold">
                                 Paramètres
                             </h2>
+                            {!user.emailVerified && (
+                                <div className="mb-4">
+                                    <button
+                                        className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700"
+                                        onClick={handleVerifyEmail}
+                                    >
+                                        Valider mon adresse mail
+                                    </button>
+                                </div>
+                            )}
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-4">
                                     <label
                                         className="block mb-2 text-sm font-bold text-gray-700"
-                                        htmlFor="username"
+                                        htmlFor="displayName"
                                     >
                                         Nom d'utilisateur
                                     </label>
                                     <input
+                                        name="displayName"
                                         className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                                        id="username"
+                                        id="displayName"
                                         type="text"
                                         placeholder="Nom d'utilisateur"
+                                        value={formData.displayName}
+                                        onChange={handleChange}
+                                        disabled={!user.emailVerified}
                                     />
                                 </div>
+
                                 <div className="mb-4">
                                     <label
                                         className="block mb-2 text-sm font-bold text-gray-700"
@@ -142,12 +193,17 @@ function Profile() {
                                         Email
                                     </label>
                                     <input
+                                        name="email"
                                         className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                                         id="email"
                                         type="email"
                                         placeholder="Email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        disabled={!user.emailVerified}
                                     />
                                 </div>
+
                                 <div className="mb-4">
                                     <label
                                         className="block mb-2 text-sm font-bold text-gray-700"
@@ -155,13 +211,33 @@ function Profile() {
                                     >
                                         Mot de passe
                                     </label>
-                                    <input
-                                        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                                        id="password"
-                                        type="password"
-                                        placeholder="Mot de passe"
-                                    />
+                                    <div className="relative">
+                                        <input
+                                            name="password"
+                                            className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                            id="password"
+                                            type={
+                                                showPassword
+                                                    ? "text"
+                                                    : "password"
+                                            }
+                                            placeholder="Mot de passe"
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            disabled={!user.emailVerified}
+                                        />
+                                        <button
+                                            className="absolute top-0 right-0 mt-3 mr-4 text-gray-500 focus:outline-none"
+                                            onClick={togglePasswordVisibility}
+                                            disabled={!user.emailVerified}
+                                        >
+                                            {showPassword
+                                                ? "Masquer"
+                                                : "Afficher"}
+                                        </button>
+                                    </div>
                                 </div>
+
                                 <div className="mb-4">
                                     <label
                                         className="block mb-2 text-sm font-bold text-gray-700"
@@ -170,33 +246,30 @@ function Profile() {
                                         Photo de profil
                                     </label>
                                     <input
-                                        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                                        id="profilePicture"
                                         type="file"
-                                        accept="image/*"
+                                        id="profilePicture"
+                                        className="w-full px-3 py-2 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                                         onChange={handleImageChange}
+                                        disabled={!user.emailVerified}
                                     />
-                                    {selectedImage ? (
-                                        <ModalImage
-                                            small={selectedImage}
-                                            large={selectedImage}
-                                            src={selectedImage}
-                                            imageBackgroundColor="rgba(255, 255, 255, 0.0)"
-                                            alt="New profile picture"
-                                            className="object-cover w-20 h-20 rounded-full"
-                                            hideDownload
-                                            hideZoom
+                                    {formData.selectedImage && (
+                                        <img
+                                            src={formData.selectedImage}
+                                            alt="Aperçu"
+                                            className="w-20 h-20 mb-3 rounded-full"
                                         />
-                                    ) : (
-                                        ""
                                     )}
                                 </div>
-                                <button
-                                    className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                                    type="submit"
-                                >
-                                    Update
-                                </button>
+
+                                <div className="flex items-center justify-between">
+                                    <button
+                                        className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                                        type="submit"
+                                        disabled={!user.emailVerified}
+                                    >
+                                        Sauvegarder
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     )}

@@ -25,33 +25,36 @@ const RequireAuth = ({ children }) => {
 const App = () => {
     return (
         <AuthProvider>
-            <StorageProvider>
-                <Router>
-                    <Layout>
-                        <Routes>
-                            <Route index path="/" element={<Home />} />
-                            <Route path="/search" element={<Search />} />
-                            <Route
-                                path="/profile"
-                                element={
-                                    <RequireAuth>
-                                        <UserProvider>
+            <UserProvider>
+                <StorageProvider>
+                    <Router>
+                        <Layout>
+                            <Routes>
+                                <Route index path="/" element={<Home />} />
+                                <Route path="/search" element={<Search />} />
+                                <Route
+                                    path="/profile"
+                                    element={
+                                        <RequireAuth>
                                             <Profile />
-                                        </UserProvider>
-                                    </RequireAuth>
-                                }
-                            />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/register" element={<Register />} />
-                            <Route
-                                path="/:type/:id/:name"
-                                element={<Serie />}
-                            />
-                            <Route path="/user/:uid" element={<User />} />
-                        </Routes>
-                    </Layout>
-                </Router>
-            </StorageProvider>
+                                        </RequireAuth>
+                                    }
+                                />
+                                <Route path="/login" element={<Login />} />
+                                <Route
+                                    path="/register"
+                                    element={<Register />}
+                                />
+                                <Route
+                                    path="/:type/:id/:name"
+                                    element={<Serie />}
+                                />
+                                <Route path="/user/:uid" element={<User />} />
+                            </Routes>
+                        </Layout>
+                    </Router>
+                </StorageProvider>
+            </UserProvider>
         </AuthProvider>
     );
 };

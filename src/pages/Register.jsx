@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Register = () => {
     const [userData, setUserData] = useState({
-        username: "",
+        displayName: "",
         email: "",
         password: "",
     });
@@ -25,7 +25,7 @@ const Register = () => {
         e.preventDefault();
         setError(null);
         try {
-            await signup(userData.username, userData.email, userData.password);
+            await signup(userData.displayName, userData.email, userData.password);
             navigate("/");
         } catch (err) {
             setError(err.message);
@@ -40,15 +40,15 @@ const Register = () => {
                 <form onSubmit={handleRegister}>
                     <div className="mt-4">
                         <div className="mb-4">
-                            <label className="block" htmlFor="username">
+                            <label className="block" htmlFor="displayName">
                                 Username
                             </label>
                             <input
                                 type="text"
-                                name="username" // Corrected attribute name
-                                id="username" // Corrected attribute id
+                                name="displayName"
+                                id="displayName"
                                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                value={userData.username}
+                                value={userData.displayName}
                                 onChange={handleChange}
                                 required
                             />
