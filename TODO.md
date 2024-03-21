@@ -1,18 +1,35 @@
 # Features
 
-## Login
+## Login / Register
 
-* [ ] Ajouter la connexion / inscripton
+* [X] Ajouter la connexion / inscripton
+
+## Profil
+
+### Séries
+* [ ] Afficher les séries favorites (manga / anime)
+
+### Calendrier
+* [ ] Créer le calendrier (hebdomadaire / mensuel)
+* [ ] Ajoute un évènement aux moments de sorties des séries favorites 
+
+### Paramètres
+* [ ] Vérifier l'adresse mail de l'utilisateur.
+* [X] Modifier l'username de l'utilisateur.
+* [X] Modifier l'email de l'utilisateur.
+* [X] Modifier le mot de passe de l'utilisateur.
+* [X] Modifier la photo de profil de l'utilisateur.
+* [ ] Modifier les préférences (thême, langue) de l'utilisateur.
+* [ ] Modifier en temps réel les informations de l'utilisateur après envoi du formulaire.
 
 ## Series
 
-- [ ] Ajout d'une série dans une liste.
-- [ ] Suppression d'un série dans une liste.
+- [ ] Ajout d'une série en favoris.
+- [ ] Suppression d'un série en favoris.
 - [ ] Noter une série ([⭐](https://emojipedia.org/fr/%C3%A9toile)/ 10).
-- [ ] Décider du jour de sortie du chapitre/épisode.
-- [ ] Voir les listes.
-- [ ] Partager une liste.
-- [ ] Basculer la visibilité d'une liste en public / privé.
+- [ ] Décider du moment de sortie du chapitre/épisode.
+- [ ] Voir les favoris.
+- [ ] Partager les favoris.
 
 ## Graphique
 
@@ -35,9 +52,10 @@
 
 ## Toasts
 
-- [ ] Toasts pour l'ajout d'une série dans une liste (loading, success, error)
-- [ ] Toasts pour la suppression d'une série dans une liste (loading, success, error)
+- [ ] Toasts pour l'ajout d'une série dans une liste (loading, success, error).
+- [ ] Toasts pour la suppression d'une série dans une liste (loading, success, error).
+- [ ] Toasts pour l'inscription / connexion / envoi du mail de vérification.
 
 ## Alertes
 
-- [ ] Alerte de confirmation lors de la déconnexion de l'utilisateur.
+- [X] Alerte de confirmation lors de la déconnexion de l'utilisateur.
