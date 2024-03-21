@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const SearchResults = () => {
     const { searchResults, isLoading } = useSearchContext();
-    console.log(searchResults)
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex flex-col items-center justify-center w-full">

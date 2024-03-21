@@ -1,35 +1,51 @@
+import { useEffect } from "react";
 import axios from "axios";
 import { useSearchContext } from "../contexts/SearchContext";
+import { useDebounce } from "../hooks/";
+import { useSearchParams } from "react-router-dom";
 
 const SearchBar = () => {
     const { setSearchResults, setInputSearch, setIsLoading, inputSearch } =
         useSearchContext();
+    const debouncedSearchTerm = useDebounce(inputSearch, 500);
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const fetchData = async () => {
-        try {
-            setIsLoading(true);
-            const response = await axios.get(
-                `https://api.jikan.moe/v4/anime?q=${inputSearch}`
-            );
-            setSearchResults(response.data.data);
-        } catch (error) {
-            console.error("Erreur lors de la recherche :", error);
-        } finally {
-            setIsLoading(false);
+    useEffect(() => {
+        // Récupère la requête de recherche à partir de l'URL lors du chargement initial du composant
+        const urlQuery = searchParams.get("query");
+        if (urlQuery && urlQuery !== inputSearch) {
+            setInputSearch(urlQuery);
         }
-    };
+    }, []); // S'exécute une seule fois à l'initialisation
+
+    useEffect(() => {
+        if (debouncedSearchTerm) {
+            const fetchData = async () => {
+                try {
+                    setIsLoading(true);
+                    const response = await axios.get(
+                        `https://api.jikan.moe/v4/anime?q=${debouncedSearchTerm}`
+                    );
+                    setSearchResults(response.data.data);
+                    setSearchParams({ query: debouncedSearchTerm });
+                } catch (error) {
+                    console.error("Erreur lors de la recherche :", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            fetchData();
+        }
+    }, [debouncedSearchTerm, setIsLoading, setSearchResults, setSearchParams]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetchData();
     };
 
     return (
         <div className="w-1/3">
-            <form
-                onSubmit={handleSubmit}
-                className="p-8"
-            >
+            <form onSubmit={handleSubmit} className="p-8">
                 <label htmlFor="searchInput" className="sr-only">
                     Rechercher
                 </label>
