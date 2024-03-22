@@ -55,7 +55,7 @@ const App = () => {
                                         element={<Serie />}
                                     />
                                     <Route
-                                        path="/user/:uid"
+                                        path="/profile/:uid"
                                         element={<User />}
                                     />
                                 </Routes>

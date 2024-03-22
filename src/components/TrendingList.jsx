@@ -14,7 +14,7 @@ const TrendingList = ({ seriesList }) => {
                     <Link to={serie.url.split('.net')[1]}>
                         <img
                             className="object-cover w-full h-96"
-                            src={serie.images.jpg.large_image_url}
+                            src={serie.images.webp.large_image_url}
                             alt={serie.title}
                         />
                         <div className="p-4">

@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const Search = () => {
-    const { setInputSearch, searchResults, isLoading } = useSearch();
+    const { setInputSearch, searchResults, isLoading, category } = useSearch();
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
@@ -30,19 +30,42 @@ const Search = () => {
                                     key={i}
                                     className="overflow-hidden bg-white rounded-lg shadow-md"
                                 >
-                                    <img
-                                        className="object-cover w-full h-96"
-                                        src={result.images.jpg.large_image_url}
-                                        alt={result.title}
-                                    />
-                                    <div className="p-4">
-                                        <h3 className="text-lg font-semibold text-gray-700">
-                                            {result.title}
-                                        </h3>
-                                        <p className="text-gray-700 line-clamp-3">
-                                            {result.synopsis}
-                                        </p>
-                                    </div>
+                                    {category === "manga" ||
+                                    category === "anime" ? (
+                                        <>
+                                            <img
+                                                className="object-cover w-full h-96"
+                                                src={
+                                                    result.images.webp
+                                                        .large_image_url
+                                                }
+                                                alt={result.title}
+                                            />
+                                            <div className="p-4">
+                                                <h3 className="text-lg font-semibold text-gray-700">
+                                                    {result.title}
+                                                </h3>
+                                                <p className="text-gray-700 line-clamp-3">
+                                                    {result.synopsis}
+                                                </p>
+                                            </div>
+                                        </>
+                                    ) : category === "users" ? (
+                                        <>
+                                            <img
+                                                className="object-cover w-full h-16"
+                                                src={
+                                                    result.images.webp.image_url
+                                                }
+                                                alt={`${result.username} profile picture`}
+                                            />
+                                            <div className="p-4">
+                                                <h3 className="text-lg font-semibold text-gray-700">
+                                                    {result.username}
+                                                </h3>
+                                            </div>
+                                        </>
+                                    ) : null}
                                 </Link>
                             ))}
                         </div>

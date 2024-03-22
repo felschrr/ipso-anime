@@ -7,7 +7,7 @@ const Header = () => {
     const location = useLocation();
 
     return (
-        <header className="mb-8 text-white bg-gray-800">
+        <header className="p-8 mb-8 text-white bg-gray-800">
             <div className="container flex items-center justify-between mx-auto">
                 <Link to="/" className="text-xl font-bold">
                     Ipso Anime
@@ -15,20 +15,7 @@ const Header = () => {
                 <SearchBar/>
                 <nav>
                     <ul className="flex space-x-4">
-                        <li>
-                            <NavLink
-                                to="/"
-                                exact="true"
-                                activeclassname="font-bold"
-                            >
-                                Home
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/search" activeclassname="font-bold">
-                                Search
-                            </NavLink>
-                        </li>
+
                         {user ? (
                             <>
                                 <li>

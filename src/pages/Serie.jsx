@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import ModalImage from "react-modal-image";
+import Rating from "react-rating-stars-component";
 
 const Serie = () => {
     const [serieData, setSerieData] = useState(null);
@@ -14,10 +15,10 @@ const Serie = () => {
             try {
                 setIsLoading(true);
                 const response = await axios.get(
-                    `https://api.jikan.moe/v4/${type}/${id}`
+                    `https://api.jikan.moe/v4/${type}/${id}/full`
                 );
                 setSerieData(response.data.data);
-                console.log(response.data.data)
+                console.log(response.data.data);
             } catch (error) {
                 console.error(
                     "Erreur lors de la récupération de la série :",
@@ -54,23 +55,30 @@ const Serie = () => {
                 <>
                     <div className="grid grid-cols-1 gap-8 mb-8 md:grid-cols-2">
                         <div className="poster">
-                            <ModalImage
-                                className="w-full rounded-lg"
-                                small={serieData.images.webp.large_image_url}
-                                large={serieData.images.webp.large_image_url}
-                                alt={serieData.title}
-                                hideDownload
-                            />
+                            {serieData.images && serieData.images.webp && (
+                                <ModalImage
+                                    className="w-full rounded-lg"
+                                    small={
+                                        serieData.images.webp.large_image_url
+                                    }
+                                    large={
+                                        serieData.images.webp.large_image_url
+                                    }
+                                    alt={serieData.title}
+                                    hideDownload
+                                />
+                            )}
                         </div>
                         <div className="details">
                             <h2 className="mb-4 text-2xl font-bold">
                                 {serieData.title}
                             </h2>
                             <p>
-                                {serieData.synopsis.replace(
-                                    "[Written by MAL Rewrite]",
-                                    ""
-                                )}
+                                {serieData.synopsis &&
+                                    serieData.synopsis.replace(
+                                        "[Written by MAL Rewrite]",
+                                        ""
+                                    )}
                             </p>
                             <ul className="mt-8">
                                 <li>
@@ -89,13 +97,22 @@ const Serie = () => {
                                     {serieData.duration}
                                 </li>
                                 <li>
-                                    <strong>Note </strong>: {serieData.score}
+                                    <strong>Note </strong>:
+                                    <Rating
+                                        count={5}
+                                        size={24}
+                                        value={serieData.score / 2}
+                                        activeColor="#ffd700"
+                                        isHalf={true}
+                                        edit={false}
+                                    />
                                 </li>
                                 <li>
                                     <strong>Genres : </strong>
-                                    {serieData.genres
-                                        .map((genre) => genre.name)
-                                        .join(", ")}
+                                    {serieData.genres &&
+                                        serieData.genres
+                                            .map((genre) => genre.name)
+                                            .join(", ")}
                                 </li>
                             </ul>
                         </div>
