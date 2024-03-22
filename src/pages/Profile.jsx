@@ -54,7 +54,10 @@ function Profile() {
             if (formData.image) {
                 await uploadImage(formData.image, user.uid);
             }
-            if (formData.displayName && formData.displayName !== user.displayName) {
+            if (
+                formData.displayName &&
+                formData.displayName !== user.displayName
+            ) {
                 await setNewDisplayName(formData.displayName);
             }
             if (formData.email && formData.email !== user.email) {
@@ -227,7 +230,7 @@ function Profile() {
                                             disabled={!user.emailVerified}
                                         />
                                         <button
-                                            className="absolute top-0 right-0 mt-3 mr-4 text-gray-500 focus:outline-none"
+                                            className="absolute top-0 right-0 px-3 py-2 text-gray-500 focus:outline-none"
                                             onClick={togglePasswordVisibility}
                                             disabled={!user.emailVerified}
                                         >
@@ -240,7 +243,7 @@ function Profile() {
 
                                 <div className="mb-4">
                                     <label
-                                        className="block mb-2 text-sm font-bold text-gray-700"
+                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                         htmlFor="profilePicture"
                                     >
                                         Photo de profil
@@ -248,7 +251,7 @@ function Profile() {
                                     <input
                                         type="file"
                                         id="profilePicture"
-                                        className="w-full px-3 py-2 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                         onChange={handleImageChange}
                                         disabled={!user.emailVerified}
                                     />
