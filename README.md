@@ -10,7 +10,7 @@
 ## Features
 
 * Bookmark your favourites series 
-* Disover trending series
+* Discover trending series
 * Setup notifications on chapter/episode releases
 
 ## Work In Progress
